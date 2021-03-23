@@ -6,11 +6,13 @@ LABEL maintainer=lsk
 ADD config /usr/local/cargo
 RUN /usr/local/cargo/bin/rustup target add wasm32-unknown-unknown
 # RUN git clone --depth 1  -b v1.0.9 https://github.com/baidu/rust-sgx-sdk.git  sgx
+RUN git clone https://gitee.com/worileqing/wasm_contract_tools.git /root/wasm_contract_tools
+RUN cd /root/wasm_contract_tools/compile-tool && rustc readhex.rs && cargo +nightly -Z unstable-options build  --release --out-dir .
+RUN cd /root/wasm_contract_tools/contract/workspace && bash build.sh
+
+ENTRYPOINT [ "/root/wasm_contract_tools/compile-tool/wasm-compile" ]
+
+# CMD ["/root/compile-tool/wasm-compile"]
 
 
-ENTRYPOINT [ "/root/compile-tool/wasm-compile" ]
-
-CMD ["/root/compile-tool/wasm-compile"]
-
-
-# sudo docker run --rm -v /home/lsk/wasm_cdc/compile-tool:/root/compile-tool/ wasm-compile   test1 test1 /root/compile-tool/lib.rs
+# sudo docker run --rm -v /home/lsk/wasm_cdc/compile-tool:/root/wasm_contract_tools/compile-tool/sources wasm-compile   test1 test1 /root/compile-tool/lib.rs
