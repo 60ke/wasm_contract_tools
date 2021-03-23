@@ -1,0 +1,16 @@
+FROM rustlang/rust:nightly
+
+LABEL author "boya"
+LABEL maintainer=lsk
+
+ADD config /usr/local/cargo
+RUN /usr/local/cargo/bin/rustup target add wasm32-unknown-unknown
+# RUN git clone --depth 1  -b v1.0.9 https://github.com/baidu/rust-sgx-sdk.git  sgx
+
+
+ENTRYPOINT [ "/root/compile-tool/wasm-compile" ]
+
+CMD ["/root/compile-tool/wasm-compile"]
+
+
+# sudo docker run --rm -v /home/lsk/wasm_cdc/compile-tool:/root/compile-tool/ wasm-compile   test1 test1 /root/compile-tool/lib.rs
